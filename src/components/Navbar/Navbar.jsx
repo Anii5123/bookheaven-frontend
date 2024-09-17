@@ -29,14 +29,14 @@ const Navbar = () => {
 
   // After login, cart and profile shown; otherwise, no
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-  const role = useSelector((state) => state.auth.role)
+  const role = useSelector((state) => state.auth.role);
   if (!isLoggedIn) {
     links.splice(2, 2);
   }
-  if(isLoggedIn == true && role === "user"){
+  if (isLoggedIn == true && role === "user") {
     links.splice(4, 1);
   }
-  if(isLoggedIn == true && role === "admin"){
+  if (isLoggedIn == true && role === "admin") {
     links.splice(3, 1);
   }
 
@@ -55,21 +55,23 @@ const Navbar = () => {
         </Link>
         <div className="nav-links-bookheaven block md:flex items-center gap-4">
           <div className="hidden md:flex gap-4">
-            {links.map((item) => (
-              <div className="flex items-center" key={item.link}>
-                {item.title === "Profile" || item.title === "Admin Profile" ? (
+            {links.map((items, i) => (
+              <div className="flex items-center" key={items.link}>
+                {items.title === "Profile" ||
+                items.title === "Admin Profile" ? (
                   <Link
-                    to={item.link}
+                    to={items.link}
+                    key={i}
                     className="px-4 py-1 border border-blue-500 rounded hover:bg-white hover:text-zinc-800 transition-all duration-300"
                   >
-                    {item.title}
+                    {items.title}
                   </Link>
                 ) : (
                   <Link
-                    to={item.link}
+                    to={items.link}
                     className="hover:text-blue-500 transition-all duration-300"
                   >
-                    {item.title}
+                    {items.title}
                   </Link>
                 )}
               </div>

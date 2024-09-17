@@ -4,20 +4,29 @@ import BookCard from "../BookCard/BookCard";
 import Loader from "../Loader/Loader";
 
 const RecentlyAdded = () => {
-  const [Data, setData] = useState();
+  const [Data, setData] = useState(); // Initialize Data state
+  const [loading, setLoading] = useState(true); // Add a loading state
+
   useEffect(() => {
     const fetch = async () => {
-      const response = await axios.get(
-        "http://localhost:1000/api/v1//get-recent-books"
-      );
-      console.log(response.data.data);
+      try {
+        const response = await axios.get(
+          "http://localhost:1000/api/v1/get-recent-books"
+        );
+        setData(response.data.data); // Set the fetched data in state
+      } catch (error) {
+        console.error("Error fetching books:", error);
+      } finally {
+        setLoading(false); // Hide the loader once data is fetched or error occurs
+      }
     };
     fetch();
   }, []);
+
   return (
     <div className="mt-8 px-4">
       <h4 className="text-3xl text-yellow-100">Recently Added Books</h4>
-      {!Data && (
+      {!Data && loading && (
         <div className="flex items-center justify-center my-8">
           <Loader />
         </div>
@@ -26,7 +35,7 @@ const RecentlyAdded = () => {
         {Data &&
           Data.map((items, i) => (
             <div key={i}>
-              <BookCard data={items} />{" "}
+              <BookCard data={items} />
             </div>
           ))}
       </div>

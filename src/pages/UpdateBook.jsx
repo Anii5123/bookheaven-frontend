@@ -9,17 +9,16 @@ const UpdateBook = () => {
     author: "",
     price: "",
     desc: "",
-    languages: "",
+    language: "", // Corrected to match with state property
   });
 
-  const {id} = useParams;
+  const { id } = useParams(); // Correctly destructured useParams
   const navigate = useNavigate();
 
-  
   const headers = {
     id: localStorage.getItem("id"),
     authorization: `Bearer ${localStorage.getItem("token")}`,
-    bookid : id,
+    bookid: id,
   };
 
   const change = (e) => {
@@ -36,12 +35,12 @@ const UpdateBook = () => {
         Data.author === "" ||
         Data.price === "" ||
         Data.desc === "" ||
-        Data.languages === ""
+        Data.language === "" // Corrected to match with state property
       ) {
         alert("Please fill all the fields");
       } else {
         const response = await axios.put(
-          "http://localhost:3001/api/update-book",
+          "http://localhost:1000/api/v1/update-book", // Updated port number to match API call
           Data,
           { headers }
         );
@@ -51,28 +50,32 @@ const UpdateBook = () => {
           author: "",
           price: "",
           desc: "",
-          languages: "",
+          language: "", // Corrected to match with state property
         });
         alert(response.data.msg);
         navigate(`/view-book-details/${id}`);
       }
     } catch (error) {
       alert(
-        error.response.data.msg || "Error occurred while adding the book"
+        error.response?.data?.msg || "Error occurred while updating the book"
       );
     }
   };
 
   useEffect(() => {
     const fetch = async () => {
-      const response = await axios.get(
-        `http://localhost:1000/api/v1/get-book-by-id/${id}`
-      );
-      setData(response.data.data);
+      try {
+        const response = await axios.get(
+          `http://localhost:1000/api/v1/get-book-by-id/${id}` // Updated port number to match API call
+        );
+        setData(response.data.data);
+      } catch (error) {
+        console.error("Error fetching book details:", error);
+      }
     };
     fetch();
-  }, []);
-  
+  }, [id]);
+
   return (
     <div className="bg-zinc-900 h-[100%] p-0 md:p-4">
       <h1 className="text-3xl md:text-5xl font-semibold text-zinc-500 mb-8">
@@ -86,7 +89,7 @@ const UpdateBook = () => {
           <input
             type="text"
             className="w-full mt-2 bg-zinc-100 p-2 outline-none"
-            placeholder="url of image"
+            placeholder="URL of image"
             name="url"
             required
             value={Data.url}
@@ -122,16 +125,16 @@ const UpdateBook = () => {
           />
         </div>
         <div className="mt-4">
-          <label htmlFor="languages" className="text-zinc-400">
+          <label htmlFor="language" className="text-zinc-400">
             Language
           </label>
           <input
             type="text"
             className="w-full mt-2 bg-zinc-100 p-2 outline-none"
             placeholder="Language of Book"
-            name="language" // Corrected name attribute
+            name="language" // Corrected to match with state property
             required
-            value={Data.language}
+            value={Data.language} // Corrected to match with state property
             onChange={change}
           />
         </div>
@@ -172,6 +175,6 @@ const UpdateBook = () => {
       </div>
     </div>
   );
-}
+};
 
 export default UpdateBook;
